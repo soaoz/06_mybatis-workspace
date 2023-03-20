@@ -2,7 +2,10 @@
 <!DOCTYPE configuration
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
+  <!-- DTD 유효성검사=> 아래에 config가 없으면 에러가난다~  -->
   
+  
+  <!-- 여기서 오타로인한 에러 많이 뜸  -->
 <configuration>
 
 	<!-- setting : mybatis를 구동시 선언할 설정들을 작성하는 영역  -->
@@ -14,7 +17,9 @@
 	
 	<!-- typeAlias : VO/DTO 클래스들의 풀클래스명을 단순한 클래스명으로 사용하기 위해서 별칭을 등록할 수 있는 영역, 안하면 풀네임com.kh...다써야함 -->
 	<typeAliases>
-		
+	<!-- 타입에 풀 클래스명 -->
+		<typeAlias type="com.kh.mybatis.member.model.vo.Member" alias="Member"/>
+		<!-- 오타나서 못찻으면 클래스낫파운드  -->
 	</typeAliases>
 	
 	
@@ -22,6 +27,7 @@
 	<environments default="devlopment">
 	
 		<environment id="devlopment">
+		<!--  기본값  -->
 		
 		<!-- 
 			*transactionManager는 JDBC MANAGED 둘 중 하나를 선택 할 수 있음
@@ -52,7 +58,8 @@
 	
 	<!-- *mapper : 실행할 sql문들을 기록해 둔 mapper 파일들을 등록하는 영역  -->
 	<mappers>
-		<mapper/>
+		<mapper resource="/mappers/member-mapper.xml"/>
+		<!-- 없는거 미리 넣어놓으면 안됨, xml안에 뭐가 있어야함! 와꾸만만들어놓은 아무내용없는 파일 등록하면 에러남 -->
 	</mappers>
 	
 	

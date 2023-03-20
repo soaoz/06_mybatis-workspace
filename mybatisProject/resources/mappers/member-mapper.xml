@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="memberMapper">
+	 <!-- namespace : 해당 mapper 파일의  고유한 별칭이 들어감 필수임!!!! 앞으로 mapper가 많아지기 때문에 어떤걸로 부를지 정해줘야함 -->
+	 <!-- 안지어주면 폴더경로 다 써가면서 호출해야함. -->
+	 
+	 <!-- 
+ 		 * DML문
+ 		 <insert | update | delete id="각 sql 식별자" [parameterType="앞단에서 전달받은 자바타입(int,String..,Member vo일경우 = 풀클래스명을 쓰거나, | 별칭을 쓰면됨)"]>
+ 		 
+ 		 </insert | update | delete>
+ 		 => 꺽쇠가 들어가야함 
+ 		 //DML문 같은 경우 어짜피 실행결과가 처리된 행수임(int)
+ 		 => 따라서 resultType, resultMap 에 대한 속성은 안써도됨 필요없음 ㅂ
+ 		 
+ 		 * SELECT 문
+ 		 <select id="각 sql 식별자 id" 구멍뚤린쿼리라면 파라미터ㅏ입필요 [parameterTyp="앞단에서 전달받은 자바타입(vo일경우 = 풀클래스명 | 별칭)"
+ 		 														 resultType | resultMap = "결과반환타입" ]>
+		 얘는 실행했을 때의 결과가 매번 달라짐 (dml은 무조건 int 행반환)
+		 count(*) => 전체행수 숫자 반환 : int -> result 타입 int
+		 USER_NAME = > 이름 : String을 반환
+		 한 행 조회 =>  멤버객체 반환함
+		 여러 행 조회 => ArrayList 반환
+		 
+		 ? 대신에 해당 sql문에 전달된 객체로부터 값을 꺼낼때는 #{필드명 또는 변수명 또는 키값}
+ 		 
+ 		 </select>
+	 	
+	 
+	  -->
+	  
+	  
+	  <!-- 회원가입 쿼리 붙여넣기  -->
+	  <!-- config 가서 설정 <insert id="insertMember" parameterType="com.kh.mybatis.member.model.vo.Member"> -->
+	  <!-- 풀클래스명 -> 넘길어서 별칭등록 필요  : 마이바티스 . config -->
+	  <insert id="insertMember" parameterType="Member">
+		  insert
+		    into member
+		    (
+		      user_no
+		    , user_id
+		    , user_pwd
+		    , user_name
+		    , email
+		    , birthday
+		    , gender
+		    , phone
+		    , address
+		    )
+		    values
+		    (
+		      seq_uno.nextval
+		    , #{userId}
+		    , #{userPwd}
+		    , #{userName}
+		    , #{email}
+		    , #{birthday}
+		    , #{gender}
+		    , #{phone}
+		    , #{address}
+		    )
+	  
+	  </insert>
+	  <!-- #{ vo 에 있는 필드명 } -->
+	 
+	 
+	 
+	 <!-- 조회된 데이터가 객체형이면 resultMap 여러줄이나오거나.. 아니면 resultType사용  -->
+	 
+	 
+	 <!-- 
+	 	* resultMap 마이바티스의 핵심 기능 중 하나!!
+	 	ResultSet으로부터 조회된 컬럼갓 하나씩 뽑아서 내가 지정한 vo객체에 각 필드에 담는 (매핑) JDBC 코드를 줄여주는 역할 수행
+	 	
+	 	<resultMap id="식별자" type="조회 결과를 담아서 반환하고자 하는 vo 객체의 타입">
+	 		<result column(db꺼) = "조회 결과를 뽑고자 하는 db컬럼명(디비꺼)" property(java꺼) ="해당 결과를 담고자하는 필드명(자바꺼)" />
+	 		<result column(db꺼) = "조회 결과를 뽑고자 하는 db컬럼명(디비꺼)" property(java꺼) ="해당 결과를 담고자하는 필드명(자바꺼)" />
+	 		<result column(db꺼) = "조회 결과를 뽑고자 하는 db컬럼명(디비꺼)" property(java꺼) ="해당 결과를 담고자하는 필드명(자바꺼)" />
+	 	
+	 	</resultMap>
+	 	
+	 	
+	  -->
+	 <select id="loginMember" parameterType="Member" resultMap="">
+		select
+		       user_no
+		     , user_id
+		     , user_pwd
+		     , email
+		     , birthday
+		     , gender
+		     , phone
+		     , address
+		     , enroll_date
+		     , modify_date
+		     , status
+		  from member
+		  where user_id =?
+		  and user_pwd = ?
+		  and status = 'Y'
+		</select>
+ </mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

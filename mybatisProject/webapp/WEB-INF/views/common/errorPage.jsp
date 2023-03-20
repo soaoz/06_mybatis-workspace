@@ -8,9 +8,10 @@
 </head>
 <body>
 
-
-	<jsp:include page="common/menubar.jsp"/>
-	<!-- 같은 상위에 있으니까 바로 common~   -->
+	<jsp:include page="menubar.jsp"/>
 	
+	<!-- 에러문구 받아옴~~ -->
+	<h1 align="center">${ errorMsg }</h1>
+	<!-- 작은 스코프 영역부터 찾아가지고 알아서 들어감~ -->
 </body>
 </html>
