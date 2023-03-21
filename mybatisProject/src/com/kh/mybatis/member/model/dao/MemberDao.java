@@ -58,8 +58,6 @@ public class MemberDao {
 	public Member loginMember(SqlSession sqlSession, Member m) {
 		//sql 디벨롭에서 쿼리짜기 
 		
-	
-		
 		//기존
 		/*
 		 * if(rest.next()){
@@ -73,9 +71,13 @@ public class MemberDao {
 		 * 
 		 */
 
-	
-	
-	
+		//selectOne 메소드 : 한행을 조회할때 사용, 조회결과가 없다면 null반환 
+		//Member loginMember = sqlSession.selectOne("memberMapper.loginMember", m);//조회결과없으면 m반환
+		//return loginMember;
+		
+		//위으두줄을 한줄로 
+		return sqlSession.selectOne("memberMapper.loginMember", m);
+		
 	}
 }
 

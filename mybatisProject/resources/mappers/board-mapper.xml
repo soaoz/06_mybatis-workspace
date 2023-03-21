@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="boardMapper">
+  
+  	<!-- config 타입 엘레아시스에 등록을 해놔서 Board라는 이름 바로 쓸수있음   -->
+  	<!--  프로퍼티는 자바필드명~! -->
+	  <resultMap id="boardResultSet" type="Board">
+
+		<result column="board_no"  property="boardNo"/>  
+		<result column="board_title"  property="boardTitle"/>  
+		<result column="user_id"  property="boardWriter"/>  
+		<result column="count"  property="count"/>  
+		<result column="create_date"  property="createDate"/>  
+		<result column=""  property=""/>  
+	  
+	  </resultMap>
+  
+  
+  
+  
+  
+  	<select id="selectListCount" resultType="_int"><!-- resultType: 별칭으로=>공홈에서확인 -->
+  		select 
+		       count(*)
+		  from board
+		  where status = 'Y'
+  	
+  	</select>
+  	<!-- 이 쿼리 때리면 숫자나옴 -> int형 ->  resultType으로 , ing형쓰고 싶으면 _int로 써야함 -->
+  	<!-- String 타입 반환이면 string : 마이바티스 공홈에서 매퍼설정 typeAliases 에서 볼 수 있음 ( 별칭영역) -->
+  
+  
+  
+  	<!-- vo 객체가 여러개나, 한줄이 나올떄는, 조회했는데 줄로나오면~ resultMap  -->
+  	<!--  네임스페이스다음에 리절트 맵 작성  -->
+  	<select id="selectList" resultMap="boardResultSet">
+	  	select
+	       board_no
+	     , board_title
+	     , user_id
+	     , count
+	     , create_date
+	  from board b
+	  join member on(board_writer = user_no)
+	 where b.status = 'Y'
+	 order 
+	    by board_no desc
+  	
+  	
+  	
+  	</select>
+  
+  
+  
+  </mapper>
