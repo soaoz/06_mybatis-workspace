@@ -1,11 +1,13 @@
 package com.kh.mybatis.board.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
 import com.kh.mybatis.board.model.vo.Board;
+import com.kh.mybatis.board.model.vo.Reply;
 import com.kh.mybatis.common.model.vo.PageInfo;
 
 public class BoardDao {
@@ -53,4 +55,98 @@ public class BoardDao {
 	
 		return list;
 	}
+	
+	
+	
+	/**
+	 * 조회수 증가
+	 * @param sqlSession
+	 * @param boardNo
+	 * @return
+	 */
+	public int increaseCount(SqlSession sqlSession,int boardNo) {
+		//쿼리 짜보기 -> board-mapper 메퍼로 
+		
+		return sqlSession.update("boardMapper.increaseCount", boardNo);
+		//완벽한쿼리일경우 매개1 미완성이면 2 (연결할메퍼, 넘길거)
+	}
+	
+	
+	/**
+	 * 게시글 상세조회 
+	 * @param sqlSession
+	 * @param boardNo
+	 * @return
+	 */
+	public Board selectBoard(SqlSession sqlSession,int boardNo) {
+		//게시글 상세조회
+		//sql 디벨롭 쿼리짜기 
+		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
+		//결과가 한행이면 selectOne
+		//메퍼에 값 넘겨주니까 메퍼에서 parameterYtpe
+		
+		
+	}
+	
+	
+	/**
+	 * 게시글 상세조회에서 댓글 목록 조회
+	 * @param sqlSession
+	 * @param boardNo
+	 */
+	public ArrayList<Reply> selectReplyList(SqlSession sqlSession, int boardNo) {
+		//쿼리짜러 
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectReplyList", boardNo);
+		//에러 -> 형변환 -> 제네릭 쓰면 에러남 
+		//매개변수 3개짜리는 페이징 처리할때
+	}
+	
+	public int selectSearchCount(SqlSession sqlSession, HashMap<String, String> map) {
+		//쿼리..
+		return sqlSession.selectOne("boardMapper.selectSearchCount", map);
+		//map을 넘김 
+	} 
+	
+	public ArrayList<Board> selectSearchList(SqlSession sqlSession,HashMap<String, String> map, PageInfo pi){
+		//페이징을 위한 로우바운즈를 사용할건데 갤 슬라면 offset
+		//위에서 복사 
+		//쿼리짜기...
+		int offset = (pi.getCurrentPage()-1)* pi.getBoardLimit();
+		int limit = pi.getBoardLimit();
+	
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectSearchList", map, rowBounds);
+	}
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

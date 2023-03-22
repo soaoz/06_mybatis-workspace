@@ -21,7 +21,7 @@
 		<typeAlias type="com.kh.mybatis.member.model.vo.Member" alias="Member"/>
 		<!-- 오타나서 못찻으면 클래스낫파운드  -->
 		<typeAlias type="com.kh.mybatis.board.model.vo.Board" alias="Board"/>
-	
+		<typeAlias type="com.kh.mybatis.board.model.vo.Reply" alias="Reply"/>
 	</typeAliases>
 	
 	

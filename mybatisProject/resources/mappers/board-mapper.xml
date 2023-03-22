@@ -14,12 +14,20 @@
 		<result column="user_id"  property="boardWriter"/>  
 		<result column="count"  property="count"/>  
 		<result column="create_date"  property="createDate"/>  
-		<result column=""  property=""/>  
+		<result column="board_content"  property="boardContent"/>  
 	  
 	  </resultMap>
+  <!-- 값이 있으면 셋팅하고 없으면 걍... 첨 만들떄는 걍 모든 컬럼을 다 씀  -->
   
   
-  
+  <!-- 새로운 vo의 리절트맵 타입에 별칭 풀클래스를안쓰기위해 타입엘리아시스가서 등럭  -->
+  	<resultMap id="replyResultSet" type="Reply" >
+  	 	<result column="reply_no"  property="replyNo"/>  
+  	 	<result column="user_id"  property="replyWriter"/>  
+  	 	<result column="reply_content"  property="replyContent"/>  
+  	 	<result column="create_date"  property="createDate"/>  
+  	 	<result column=""  property=""/>  
+  	</resultMap>
   
   
   	<select id="selectListCount" resultType="_int"><!-- resultType: 별칭으로=>공홈에서확인 -->
@@ -49,10 +57,124 @@
 	 order 
 	    by board_no desc
   	
-  	
-  	
   	</select>
   
+  <!-- _int : 정해준거 -->
+  	<update id="increaseCount" parameterType="_int">
+  	
+  		update
+  			   board
+  		   set count = count + 1
+  		 where board_no = #{ boardNo }
+  		   and status = 'Y'  
+  	</update>
+  	
+  	<!-- 셀렉문이니까 resultMap 필요 -> 위에있어서 재사용 -> 뽑아야할데이터를 확인하고 없으면 추가  -->
+  	<!-- 실행한 결과를 resultMap의 아이디를 찾아서 거기에 저장, 넘겨받는타입 숫자니까 int -> #{}  -->
+  	<select id="selectBoard" resultMap="boardResultSet" parameterType="_int">
+	  	select
+	       board_no
+	    , board_title
+	    , user_id
+	    , count
+	    , create_date
+	    , board_content
+	 from board
+	 join member on (board_writer = user_no)
+	where board_no = #{boardNo}
+  	</select>
+  
+	<select id="selectReplyList" resultMap="replyResultSet" parameterType="_int">
+	 select 
+	      reply_no
+	    , user_id
+	    , reply_content
+	    , create_date
+	 from reply r
+	 join member on (reply_writer = user_no)
+	where ref_bno = #{ boardNo }
+	  and r.status = 'Y'
+	order
+	   by reply_no desc
+	</select>
+	  
+	  
+	  <!-- 동적쿼리~~~~~~~~~!!!! -->
+	  <!-- resultType : 이걸 수행한 결과는 int 타입이다 -->
+	  <!-- 파라미터타입 생략해도됨  -->
+ <select id="selectSearchCount" resultType="_int">
+	  select
+	         count(*)
+	    from board b
+	  join member on(board_writer = user_no)
+	  where b.status  = 'Y'
+	  <if test="condition == 'writer'">
+	  <!-- 컨디션의 키값이 writer인경우  -->
+	  and user_id 
+	  </if>
+	  <if test="condition == 'title'">
+	  and board_title
+	  </if>
+	  <if test="condition == 'content'">
+	   and board_content
+	  </if>
+	  like '%'||#{ keyword } ||'%'
+	  <!-- 해쉬맵의 키값이 keyword <키값이들어갈수도잇음>  ,like~~는 다 중복되니까 아래로 뺌  -->
+
+</select>
+  
+  
+  <!-- 쿼리가 보드리스트 하는거랑 똑같으니까 map 재활용  -->
+  <select id="selectSearchList" resultMap="boardResultSet">
+	  select
+	   	  	  board_no
+	 	    , board_title
+			, user_id
+			, count
+			, create_date
+		 from board b
+		 join member on (board_writer = user_no)
+		 where b.status = 'Y'
+		<choose>
+			<when test="condition == 'writer'">
+				and user_id	
+			</when>
+			<when test="condition == 'title'">
+				and board_title
+			</when>
+			<otherwise>
+				and board_content 
+			</otherwise>
+		</choose>
+			 like '%'||#{keyword}||'%'
+			 order
+			 by board_no desc
+  </select>
   
   
   </mapper>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
