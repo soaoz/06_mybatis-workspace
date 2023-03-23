@@ -34,7 +34,7 @@ public class MemberInsertController extends HttpServlet {
 		//아이디,비번,이름 입력하면 값을 가지고db로 날라가야함
 		
 		//인코딩처리
-		request.setCharacterEncoding("utf-8");
+		//request.setCharacterEncoding("utf-8");
 		
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
